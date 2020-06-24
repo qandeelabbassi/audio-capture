@@ -93,6 +93,7 @@ public class DefaultSoundViewPlayer implements SoundViewPlayer {
 
     @Override
     public void setAudioSource(Context context, Uri uri) throws IOException {
+        mediaPlayer.reset();
         mediaPlayer.setDataSource(context, uri);
 
         preparePlayer();
@@ -132,7 +133,7 @@ public class DefaultSoundViewPlayer implements SoundViewPlayer {
 
     @Override
     public void toggle() {
-        if(mediaPlayer.isPlaying()) {
+        if (mediaPlayer.isPlaying()) {
             pause();
         } else {
             play();

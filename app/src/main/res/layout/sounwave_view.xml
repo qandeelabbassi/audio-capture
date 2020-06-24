@@ -18,7 +18,6 @@
         android:layout_height="48dp"
         android:layout_below="@+id/vSoundBar"
         android:layout_centerHorizontal="true"
-        android:background="@android:color/transparent"
         app:srcCompat="@drawable/ic_play" />
 
     <TextView
@@ -28,7 +27,7 @@
         android:layout_below="@id/vSoundBar"
         android:layout_alignEnd="@id/vSoundBar"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom|right|end"
+        android:layout_gravity="bottom|end"
         android:gravity="center"
         android:text="@string/initial_time"
         android:textSize="14sp" />

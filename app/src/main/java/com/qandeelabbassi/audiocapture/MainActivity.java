@@ -15,7 +15,9 @@ import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -28,10 +30,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static com.qandeelabbassi.audiocapture.RecordingService.ACTION_STOP;
+
 public class MainActivity extends AppCompatActivity {
+    private final static boolean DEBUG = true;
     public static String BROADCAST_WAVEFORM = "com.qandeelabbassi.audiocapture.waveform";
     public static String BROADCAST_EXTRA_DATA = "com.qandeelabbassi.audiocapture.waveform_data";
     private SoundWaveView audioVisualizerView;
+    private Button btnStart;
+    private boolean isRecording = false;
+    private TextView txtFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +47,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         audioVisualizerView = findViewById(R.id.visualizer);
+        txtFilePath = findViewById(R.id.txtFilePath);
+        btnStart = findViewById(R.id.btnStart);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
-                    1000);
-        } else {
-            MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-            if (mediaProjectionManager != null) {
-                startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 2000);
-            }
-        }
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, makeIntentFilter());
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isRecording) {
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.RECORD_AUDIO},
+                                1000);
+                    } else {
+                        MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+                        if (mediaProjectionManager != null) {
+                            startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 2000);
+                        }
+                    }
+                } else {
+                    final Intent broadcast = new Intent(ACTION_STOP);
+                    sendBroadcast(broadcast);
+                    btnStart.setText(R.string.start_recording);
+                    isRecording = false;
+                }
+            }
+        });
     }
 
 
@@ -70,21 +93,9 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(RecordingService.EXTRA_DATA, data);
 
                 ContextCompat.startForegroundService(this, intent);
-            }
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        if (requestCode == 1000) {// If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-                if (mediaProjectionManager != null) {
-                    startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), 2000);
-                }
-            } else {
-                Log.d("TAG", "permission denied by user");
+                btnStart.setText(R.string.stop_recording);
+                isRecording = true;
             }
         }
     }
@@ -93,9 +104,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(final Context context, final Intent intent) {
             final String action = intent.getAction();
-
             if (BROADCAST_WAVEFORM.equals(action) && intent.getExtras() != null) {
                 final File file = (File) intent.getExtras().getSerializable(BROADCAST_EXTRA_DATA);
+                if(file == null)
+                    return;
+
+                if (DEBUG)
+                    txtFilePath.setText(String.format("File path: %s", file.getAbsolutePath()));
+
                 try {
                     Uri uri = FileProvider.getUriForFile(MainActivity.this, getApplicationContext().getPackageName() + ".provider", file);
                     audioVisualizerView.addAudioFileUri(uri);

@@ -71,9 +71,9 @@ public class SoundVisualizerBarView extends View {
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.SoundVisualizerBarView, 0, 0);
         playedStateColor = a.getColor(R.styleable.SoundVisualizerBarView_statePlayingColor,
-                ContextCompat.getColor(context, R.color.colorRecording));
-        nonPlayedStateColor = a.getColor(R.styleable.SoundVisualizerBarView_stateNonPlayingColor,
                 ContextCompat.getColor(context, R.color.gray));
+        nonPlayedStateColor = a.getColor(R.styleable.SoundVisualizerBarView_stateNonPlayingColor,
+                ContextCompat.getColor(context, R.color.colorRecording));
 
         a.recycle();
 

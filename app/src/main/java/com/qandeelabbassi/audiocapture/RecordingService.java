@@ -44,7 +44,7 @@ public class RecordingService extends Service {
     public static final String NOTIFICATION_CHANNEL_RECORDING = "channel_recording";
     public static final int NOTIFICATION_ID = 1000;
 
-    private final static String ACTION_STOP = "com.qandeelabbassi.audiocapture.stop";
+    public final static String ACTION_STOP = "com.qandeelabbassi.audiocapture.stop";
     private final static int REQUEST_STOP = 1;
     private final static int REQUEST_OPEN_ACTIVITY = 2;
 
