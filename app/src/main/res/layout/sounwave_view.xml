@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+
+    <com.qandeelabbassi.audiocapture.visualizer.SoundVisualizerBarView
+        android:id="@+id/vSoundBar"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:id="@+id/vActionButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@+id/vSoundBar"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_play" />
+
+    <TextView
+        android:id="@+id/vTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vSoundBar"
+        android:layout_alignEnd="@id/vSoundBar"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom|right|end"
+        android:gravity="center"
+        android:text="@string/initial_time"
+        android:textSize="14sp" />
+
+</RelativeLayout>

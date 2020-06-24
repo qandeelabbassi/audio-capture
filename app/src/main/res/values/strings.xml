@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Audio Capture</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="initial_time">00:00</string>
+</resources>
